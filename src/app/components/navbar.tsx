@@ -59,7 +59,7 @@ export const Navbar = () => {
               Data Saya
             </Link>
             <Link
-              href="/masuk"
+              href="/register"
               className="bg-[#04A04A] text-white px-8 py-2 rounded-full font-medium hover:bg-[#038B3F] transition-colors"
             >
               Masuk
