@@ -1,5 +1,5 @@
 import React from "react";
-import { LoginUserModule } from "@/modules/LoginModule";
+import { LoginUserModule } from "@/modules/LoginUserModule";
 
 const page = () => {
   return <LoginUserModule />;
