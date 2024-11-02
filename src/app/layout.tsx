@@ -1,15 +1,12 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { Footer } from "./components/footer";
+import { Navbar } from "./components/navbar";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
+const albertSans = localFont({
+  src: "./fonts/albert-sans-v1-latin-regular.woff2",
+  variable: "--font-albert-sans",
   weight: "100 900",
 });
 
@@ -24,11 +21,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${albertSans.variable} min-h-screen antialiased bg-[#F5F5FF]`}
       >
+        <Navbar />
         {children}
+        <Footer />
       </body>
     </html>
   );
