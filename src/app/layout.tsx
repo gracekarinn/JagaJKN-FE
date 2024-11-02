@@ -25,9 +25,7 @@ export default function RootLayout({
       <body
         className={`${albertSans.variable} min-h-screen antialiased bg-[#F5F5FF]`}
       >
-        <Navbar />
         {children}
-        <Footer />
       </body>
     </html>
   );
