@@ -56,6 +56,7 @@ export const LoginForm = () => {
       });
 
       const response = await res.json();
+      console.log("Login response:", response);
 
       if (!res.ok) {
         const errorData = response as ApiError;
@@ -63,9 +64,21 @@ export const LoginForm = () => {
       }
 
       const loginData = response as LoginResponse;
-      console.log("Login data:", loginData);
-      setCookie("token", loginData.accessToken, { path: "/" });
-      toast.success(`Selamat datang, ${loginData.user.name}`);
+
+      // Store token with 'Bearer ' prefix
+      const token = loginData.token.startsWith("Bearer ")
+        ? loginData.token
+        : `Bearer ${loginData.token}`;
+
+      // Set cookie with proper options
+      setCookie("token", token, {
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        maxAge: 24 * 60 * 60, // 24 hours
+      });
+
+      toast.success(`Selamat datang, ${loginData.user.namaLengkap}`);
       router.push("/dashboard");
     } catch (err) {
       if (err instanceof Error) {
