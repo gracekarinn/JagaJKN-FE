@@ -51,7 +51,6 @@ const profileSchema = z.object({
 export const ProfileSection = () => {
   const [profile, setProfile] = useState<FaskesProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const form = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
@@ -97,34 +96,6 @@ export const ProfileSection = () => {
     fetchProfile();
   }, []);
 
-  const onSubmit = async (values: z.infer<typeof profileSchema>) => {
-    try {
-      const token = getCookie("token");
-      const response = await fetch(
-        "https://jagajkn-be-production.up.railway.app/api/v1/faskes/profile",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(values),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to update profile");
-      }
-
-      toast.success("Profil berhasil diperbarui");
-      setIsEditModalOpen(false);
-      fetchProfile(); // Refresh profile data
-    } catch (error) {
-      console.error("Failed to update profile:", error);
-      toast.error("Gagal memperbarui profil");
-    }
-  };
-
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-[60vh]">
@@ -137,10 +108,6 @@ export const ProfileSection = () => {
     <div className="p-6 space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-800">Profil Faskes</h2>
-        <Button onClick={() => setIsEditModalOpen(true)} className="gap-2">
-          <Edit2 className="h-4 w-4" />
-          Edit Profil
-        </Button>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
@@ -206,93 +173,6 @@ export const ProfileSection = () => {
           </CardContent>
         </Card>
       </div>
-
-      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-        <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader>
-            <DialogTitle>Edit Profil Faskes</DialogTitle>
-          </DialogHeader>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="nama"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nama Faskes</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="alamat"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Alamat</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="noTelp"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nomor Telepon</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input {...field} type="email" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="flex justify-end gap-3 pt-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setIsEditModalOpen(false)}
-                >
-                  Batal
-                </Button>
-                <Button
-                  type="submit"
-                  disabled={form.formState.isSubmitting}
-                  className="gap-2"
-                >
-                  {form.formState.isSubmitting ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Menyimpan...
-                    </>
-                  ) : (
-                    "Simpan"
-                  )}
-                </Button>
-              </div>
-            </form>
-          </Form>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
