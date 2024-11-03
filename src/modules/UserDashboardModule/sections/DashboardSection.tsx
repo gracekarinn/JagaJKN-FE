@@ -116,20 +116,21 @@ export const DashboardSection = () => {
   }
 
   return (
-    <div className="p-4 space-y-6">
-      <div className="bg-gradient-to-r from-[#04A04A] to-[#038B3F] rounded-xl p-6 text-white shadow-lg">
-        <div className="flex items-center space-x-4 mb-4">
-          <div className="bg-white/20 p-3 rounded-full">
+    <div className="p-2 sm:p-4 space-y-4 sm:space-y-6 max-w-7xl mx-auto">
+      {/* Profile Card */}
+      <div className="bg-gradient-to-r from-[#04A04A] to-[#038B3F] rounded-xl p-4 sm:p-6 text-white shadow-lg">
+        <div className="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4 mb-4">
+          <div className="bg-white/20 p-3 rounded-full w-fit">
             <User className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="text-xl font-bold">
+            <h2 className="text-lg sm:text-xl font-bold">
               {userData?.namaLengkap || "User"}
             </h2>
             <p className="text-sm opacity-90">NIK: {userData?.nik || "-"}</p>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-4 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-4">
           <div className="bg-white/10 rounded-lg p-3">
             <p className="text-sm opacity-80">Status Kepesertaan</p>
             <p className="font-semibold">{dummyData.memberStatus}</p>
@@ -141,95 +142,110 @@ export const DashboardSection = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-4">
-        <Card className="p-4 flex flex-col items-center justify-center space-y-2 hover:bg-gray-50 transition-colors cursor-pointer">
-          <Hospital className="w-6 h-6 text-[#04A04A]" />
+      {/* Quick Action Buttons */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
+        <Card className="p-3 sm:p-4 flex flex-col items-center justify-center space-y-2 hover:bg-gray-50 transition-colors cursor-pointer">
+          <Hospital className="w-5 h-5 sm:w-6 sm:h-6 text-[#04A04A]" />
           <span className="text-xs text-center font-medium">Cari Faskes</span>
         </Card>
-        <Card className="p-4 flex flex-col items-center justify-center space-y-2 hover:bg-gray-50 transition-colors cursor-pointer">
-          <Calendar className="w-6 h-6 text-[#04A04A]" />
+        <Card className="p-3 sm:p-4 flex flex-col items-center justify-center space-y-2 hover:bg-gray-50 transition-colors cursor-pointer">
+          <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-[#04A04A]" />
           <span className="text-xs text-center font-medium">Jadwal</span>
         </Card>
-        <Card className="p-4 flex flex-col items-center justify-center space-y-2 hover:bg-gray-50 transition-colors cursor-pointer">
-          <FileText className="w-6 h-6 text-[#04A04A]" />
+        <Card className="p-3 sm:p-4 flex flex-col items-center justify-center space-y-2 hover:bg-gray-50 transition-colors cursor-pointer">
+          <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-[#04A04A]" />
           <span className="text-xs text-center font-medium">Riwayat</span>
         </Card>
-        <Card className="p-4 flex flex-col items-center justify-center space-y-2 hover:bg-gray-50 transition-colors cursor-pointer">
-          <Activity className="w-6 h-6 text-[#04A04A]" />
+        <Card className="p-3 sm:p-4 flex flex-col items-center justify-center space-y-2 hover:bg-gray-50 transition-colors cursor-pointer">
+          <Activity className="w-5 h-5 sm:w-6 sm:h-6 text-[#04A04A]" />
           <span className="text-xs text-center font-medium">Emergency</span>
         </Card>
       </div>
 
-      <div className="space-y-4">
-        <Card className="p-4">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold flex items-center gap-2">
-              <Clock className="w-5 h-5 text-[#04A04A]" />
-              Jadwal Temu Berikutnya
-            </h3>
-          </div>
-          <p className="text-sm text-gray-600">
-            {dummyData.upcomingAppointment}
-          </p>
-        </Card>
+      {/* Info Cards Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="space-y-4">
+          {/* Upcoming Appointment Card */}
+          <Card className="p-4">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold flex items-center gap-2 text-sm sm:text-base">
+                <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-[#04A04A]" />
+                Jadwal Temu Berikutnya
+              </h3>
+            </div>
+            <p className="text-xs sm:text-sm text-gray-600">
+              {dummyData.upcomingAppointment}
+            </p>
+          </Card>
 
-        <Card className="p-4">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold flex items-center gap-2">
-              <FileText className="w-5 h-5 text-[#04A04A]" />
-              Riwayat Kunjungan Terakhir
-            </h3>
-          </div>
-          <div className="space-y-3">
-            {recentRecords.map((record, index) => (
-              <div
-                key={index}
-                className="border-b last:border-0 pb-2 last:pb-0"
-              >
-                <p className="text-sm font-medium">{record.hospital}</p>
-                <p className="text-xs text-gray-500">
-                  {record.date} - {record.diagnosis}
-                </p>
-                <p className="text-xs text-gray-500">{record.doctor}</p>
-              </div>
-            ))}
-          </div>
-        </Card>
-
-        <Card className="p-4">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold flex items-center gap-2">
-              <Pill className="w-5 h-5 text-[#04A04A]" />
-              Pengobatan Aktif
-            </h3>
-          </div>
-          <div className="space-y-3">
-            {medications.map((med, index) => (
-              <div
-                key={index}
-                className="border-b last:border-0 pb-2 last:pb-0"
-              >
-                <p className="text-sm font-medium">{med.name}</p>
-                <p className="text-xs text-gray-500">
-                  {med.dosage} - {med.frequency}
-                </p>
-                <p className="text-xs text-gray-500">Durasi: {med.duration}</p>
-              </div>
-            ))}
-          </div>
-        </Card>
-      </div>
-
-      <Card className="p-4 bg-green-50">
-        <div className="flex items-center gap-2 mb-2">
-          <AlertCircle className="w-5 h-5 text-[#04A04A]" />
-          <h3 className="font-semibold text-green-700">Tips Kesehatan</h3>
+          {/* Recent Visits Card */}
+          <Card className="p-4">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold flex items-center gap-2 text-sm sm:text-base">
+                <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-[#04A04A]" />
+                Riwayat Kunjungan Terakhir
+              </h3>
+            </div>
+            <div className="space-y-3">
+              {recentRecords.map((record, index) => (
+                <div
+                  key={index}
+                  className="border-b last:border-0 pb-2 last:pb-0"
+                >
+                  <p className="text-xs sm:text-sm font-medium">
+                    {record.hospital}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {record.date} - {record.diagnosis}
+                  </p>
+                  <p className="text-xs text-gray-500">{record.doctor}</p>
+                </div>
+              ))}
+            </div>
+          </Card>
         </div>
-        <p className="text-sm text-green-700">
-          Jangan lupa untuk selalu menjaga kesehatan dengan berolahraga secara
-          teratur dan mengonsumsi makanan bergizi seimbang.
-        </p>
-      </Card>
+
+        <div className="space-y-4">
+          {/* Medications Card */}
+          <Card className="p-4">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold flex items-center gap-2 text-sm sm:text-base">
+                <Pill className="w-4 h-4 sm:w-5 sm:h-5 text-[#04A04A]" />
+                Pengobatan Aktif
+              </h3>
+            </div>
+            <div className="space-y-3">
+              {medications.map((med, index) => (
+                <div
+                  key={index}
+                  className="border-b last:border-0 pb-2 last:pb-0"
+                >
+                  <p className="text-xs sm:text-sm font-medium">{med.name}</p>
+                  <p className="text-xs text-gray-500">
+                    {med.dosage} - {med.frequency}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    Durasi: {med.duration}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <Card className="p-4 bg-green-50">
+            <div className="flex items-center gap-2 mb-2">
+              <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-[#04A04A]" />
+              <h3 className="font-semibold text-green-700 text-sm sm:text-base">
+                Tips Kesehatan
+              </h3>
+            </div>
+            <p className="text-xs sm:text-sm text-green-700">
+              Jangan lupa untuk selalu menjaga kesehatan dengan berolahraga
+              secara teratur dan mengonsumsi makanan bergizi seimbang.
+            </p>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 };
