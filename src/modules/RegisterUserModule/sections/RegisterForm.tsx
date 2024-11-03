@@ -20,12 +20,19 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { CircleUser, Lock, Mail, Phone } from "lucide-react";
+import {
+  CircleUser,
+  Lock,
+  Mail,
+  Phone,
+  Building2,
+  Loader2,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { RegisterSchema, registerSchema, API_ENDPOINTS } from "../constant";
-import { Building2 } from "lucide-react";
+import Image from "next/image";
 
 export const RegisterForm = () => {
   const router = useRouter();
@@ -76,171 +83,205 @@ export const RegisterForm = () => {
       </div>
 
       <div className="relative flex min-h-screen items-center justify-center p-4">
-        <div className="w-full max-w-[420px] space-y-8">
-          <div className="text-center space-y-6">
-            <div className="relative inline-block group">
-              <div className="absolute inset-0 bg-blue-600/20 rounded-full blur-xl transition-all duration-500 group-hover:bg-blue-600/30" />
-              <div className="relative bg-white p-4 rounded-full shadow-lg transform transition-all duration-500 hover:scale-105">
-                <Building2 className="h-12 w-12 text-blue-600" />
+        <div className="flex w-full max-w-6xl justify-between items-center">
+          <div className="w-full max-w-[420px] space-y-8">
+            <div className="text-center space-y-6">
+              <div className="relative inline-block group">
+                <div className="absolute inset-0 bg-blue-600/20 rounded-full blur-xl transition-all duration-500 group-hover:bg-blue-600/30" />
               </div>
             </div>
-            <div className="space-y-2">
-              <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-700 via-blue-600 to-blue-500 bg-clip-text text-transparent">
-                BPJS Kesehatan
-              </h2>
-              <p className="text-sm text-gray-600">
-                Sistem Informasi Rekam Medis Terintegrasi Blockchain
-              </p>
-            </div>
-          </div>
-          <Card className="w-full max-w-md mx-auto">
-            <CardHeader>
-              <CardTitle>Registrasi Akun Baru</CardTitle>
-              <CardDescription>
-                Silakan lengkapi data diri Anda untuk membuat akun
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-4"
-                >
-                  <FormField
-                    control={form.control}
-                    name="nik"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>NIK</FormLabel>
-                        <FormControl>
-                          <div className="relative">
-                            <CircleUser className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                            <Input
-                              {...field}
-                              className="pl-10"
-                              placeholder="Masukkan 16 digit NIK"
-                            />
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
 
-                  <FormField
-                    control={form.control}
-                    name="namaLengkap"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Nama Lengkap</FormLabel>
-                        <FormControl>
-                          <div className="relative">
-                            <CircleUser className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                            <Input
-                              {...field}
-                              className="pl-10"
-                              placeholder="Masukkan nama lengkap"
-                            />
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="noTelp"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Nomor Telepon</FormLabel>
-                        <FormControl>
-                          <div className="relative">
-                            <Phone className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                            <Input
-                              {...field}
-                              className="pl-10"
-                              placeholder="Contoh: 08123456789"
-                            />
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email (Opsional)</FormLabel>
-                        <FormControl>
-                          <div className="relative">
-                            <Mail className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                            <Input
-                              {...field}
-                              value={field.value || ""}
-                              type="email"
-                              className="pl-10"
-                              placeholder="Masukkan email"
-                            />
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Password</FormLabel>
-                        <FormControl>
-                          <div className="relative">
-                            <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                            <Input
-                              {...field}
-                              type="password"
-                              className="pl-10"
-                              placeholder="Minimal 6 karakter"
-                            />
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <Button
-                    type="submit"
-                    className="w-full"
-                    disabled={form.formState.isSubmitting}
+            <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-xl">
+              <CardHeader className="space-y-1 pb-4">
+                <CardTitle className="text-2xl text-center font-bold">
+                  Registrasi Akun Baru
+                </CardTitle>
+                <CardDescription className="text-center">
+                  Silakan lengkapi data diri Anda untuk membuat akun
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="pb-4">
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-4"
                   >
-                    {form.formState.isSubmitting ? (
-                      <div className="flex items-center justify-center">
-                        <div className="w-5 h-5 border-t-2 border-white rounded-full animate-spin" />
-                      </div>
-                    ) : (
-                      "Daftar"
-                    )}
-                  </Button>
-                </form>
-              </Form>
-            </CardContent>
-            <CardFooter className="flex justify-center">
-              <div className="text-sm text-gray-600">
-                Sudah punya akun?{" "}
-                <Link
-                  href="/login"
-                  className="text-blue-600 hover:text-blue-700 font-medium"
-                >
-                  Login disini
-                </Link>
-              </div>
-            </CardFooter>
-          </Card>
+                    <FormField
+                      control={form.control}
+                      name="nik"
+                      render={({ field }) => (
+                        <FormItem className="space-y-1">
+                          <FormLabel className="text-sm font-medium text-gray-700">
+                            NIK
+                          </FormLabel>
+                          <FormControl>
+                            <div className="relative group">
+                              <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-600 to-blue-400 opacity-20 blur-sm group-focus-within:opacity-30 transition-opacity" />
+                              <div className="relative">
+                                <CircleUser className="absolute left-3 top-2.5 h-5 w-5 text-blue-600 transition-colors group-hover:text-blue-700" />
+                                <Input
+                                  {...field}
+                                  className="pl-10 h-12 bg-white/80 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                  placeholder="Masukkan 16 digit NIK"
+                                />
+                              </div>
+                            </div>
+                          </FormControl>
+                          <FormMessage className="text-xs" />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="namaLengkap"
+                      render={({ field }) => (
+                        <FormItem className="space-y-1">
+                          <FormLabel className="text-sm font-medium text-gray-700">
+                            Nama Lengkap
+                          </FormLabel>
+                          <FormControl>
+                            <div className="relative group">
+                              <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-600 to-blue-400 opacity-20 blur-sm group-focus-within:opacity-30 transition-opacity" />
+                              <div className="relative">
+                                <CircleUser className="absolute left-3 top-2.5 h-5 w-5 text-blue-600 transition-colors group-hover:text-blue-700" />
+                                <Input
+                                  {...field}
+                                  className="pl-10 h-12 bg-white/80 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                  placeholder="Masukkan nama lengkap"
+                                />
+                              </div>
+                            </div>
+                          </FormControl>
+                          <FormMessage className="text-xs" />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="noTelp"
+                      render={({ field }) => (
+                        <FormItem className="space-y-1">
+                          <FormLabel className="text-sm font-medium text-gray-700">
+                            Nomor Telepon
+                          </FormLabel>
+                          <FormControl>
+                            <div className="relative group">
+                              <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-600 to-blue-400 opacity-20 blur-sm group-focus-within:opacity-30 transition-opacity" />
+                              <div className="relative">
+                                <Phone className="absolute left-3 top-2.5 h-5 w-5 text-blue-600 transition-colors group-hover:text-blue-700" />
+                                <Input
+                                  {...field}
+                                  className="pl-10 h-12 bg-white/80 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                  placeholder="Contoh: 08123456789"
+                                />
+                              </div>
+                            </div>
+                          </FormControl>
+                          <FormMessage className="text-xs" />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem className="space-y-1">
+                          <FormLabel className="text-sm font-medium text-gray-700">
+                            Email (Opsional)
+                          </FormLabel>
+                          <FormControl>
+                            <div className="relative group">
+                              <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-600 to-blue-400 opacity-20 blur-sm group-focus-within:opacity-30 transition-opacity" />
+                              <div className="relative">
+                                <Mail className="absolute left-3 top-2.5 h-5 w-5 text-blue-600 transition-colors group-hover:text-blue-700" />
+                                <Input
+                                  {...field}
+                                  value={field.value || ""}
+                                  type="email"
+                                  className="pl-10 h-12 bg-white/80 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                  placeholder="Masukkan email"
+                                />
+                              </div>
+                            </div>
+                          </FormControl>
+                          <FormMessage className="text-xs" />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem className="space-y-1">
+                          <FormLabel className="text-sm font-medium text-gray-700">
+                            Password
+                          </FormLabel>
+                          <FormControl>
+                            <div className="relative group">
+                              <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-600 to-blue-400 opacity-20 blur-sm group-focus-within:opacity-30 transition-opacity" />
+                              <div className="relative">
+                                <Lock className="absolute left-3 top-2.5 h-5 w-5 text-blue-600 transition-colors group-hover:text-blue-700" />
+                                <Input
+                                  {...field}
+                                  type="password"
+                                  className="pl-10 h-12 bg-white/80 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                  placeholder="Minimal 6 karakter"
+                                />
+                              </div>
+                            </div>
+                          </FormControl>
+                          <FormMessage className="text-xs" />
+                        </FormItem>
+                      )}
+                    />
+
+                    <Button
+                      type="submit"
+                      className="w-full h-12 bg-[#04A04A] hover:from-blue-700 hover:to-blue-600 text-white rounded-lg font-semibold shadow-lg shadow-blue-500/30 hover:shadow-blue-600/40 transition-all duration-300"
+                      disabled={form.formState.isSubmitting}
+                    >
+                      {form.formState.isSubmitting ? (
+                        <div className="flex items-center justify-center space-x-2">
+                          <Loader2 className="h-5 w-5 animate-spin" />
+                          <span>Memproses...</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center space-x-2 transition-transform duration-300 hover:scale-105">
+                          <span>Daftar</span>
+                        </div>
+                      )}
+                    </Button>
+                  </form>
+                </Form>
+              </CardContent>
+
+              <CardFooter className="flex flex-col space-y-4 pt-0">
+                <div className="text-sm text-center text-gray-600">
+                  Sudah punya akun?{" "}
+                  <Link
+                    href="/login"
+                    className="font-medium text-blue-600 hover:text-blue-700 transition-colors underline-offset-4 hover:underline"
+                  >
+                    Login disini
+                  </Link>
+                </div>
+              </CardFooter>
+            </Card>
+          </div>
+          <div className="hidden lg:block w-[600px] h-[600px] relative">
+            <Image
+              alt="contoh"
+              src="/meja.png"
+              fill
+              sizes="none"
+              className="object-contain"
+              quality={100}
+            />
+          </div>
         </div>
       </div>
     </div>
