@@ -26,7 +26,6 @@ interface UserProfile {
   updatedAt: string;
 }
 
-// Separate the navigation links into a client component
 const NavigationLinks = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
