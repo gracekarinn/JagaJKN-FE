@@ -1,8 +1,11 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { Menu, X, LogOut, User } from "lucide-react";
+import { deleteCookie, getCookie } from "cookies-next";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -15,19 +18,68 @@ import { AlertCircle } from "lucide-react";
 
 export const Navbar = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [userName, setUserName] = useState<string | null>(null);
+  const [isClient, setIsClient] = useState(false);
   const pathname = usePathname();
-  const isAuthenticated = false;
+  const router = useRouter();
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const token = getCookie("token");
+      if (token) {
+        try {
+          console.log("Token:", token);
+          const res = await fetch(
+            "https://jagajkn-be-production.up.railway.app/api/v1/user/profile",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          if (!res.ok) {
+            throw new Error("Failed to fetch user info");
+          }
+          const data = await res.json();
+          setUserName(data.user.namaLengkap);
+        } catch (error) {
+          console.error("Error fetching user info:", error);
+        }
+      } else {
+        console.error("Token not found in cookies");
+      }
+    };
+
+    if (isClient) {
+      fetchUserInfo();
+    }
+  }, [isClient]);
 
   const isActivePath = (path: string) => {
     return pathname === path;
   };
 
   const handleProtectedRoute = (e: React.MouseEvent) => {
-    if (!isAuthenticated) {
+    if (!isClient || !getCookie("token")) {
       e.preventDefault();
       setShowAuthModal(true);
     }
   };
+
+  const handleLogout = () => {
+    deleteCookie("token");
+    toast.success("Berhasil logout");
+    router.push("/login");
+  };
+
+  if (!isClient) {
+    return null;
+  }
 
   return (
     <>
@@ -78,12 +130,40 @@ export const Navbar = () => {
               >
                 Data Saya
               </Link>
-              <Link
-                href="/register"
-                className="bg-[#04A04A] text-white px-8 py-2 rounded-full font-medium hover:bg-[#038B3F] transition-colors"
-              >
-                Masuk
-              </Link>
+              {getCookie("token") ? (
+                <div className="relative">
+                  <button
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    className="flex items-center bg-[#04A04A] text-white px-8 py-2 rounded-full font-medium hover:bg-[#038B3F] transition-colors"
+                  >
+                    Halo, {userName || "User"}
+                    <User className="ml-2 w-5 h-5" />
+                  </button>
+                  {isDropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg">
+                      <Link
+                        href="/profile"
+                        className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                      >
+                        Profile
+                      </Link>
+                      <button
+                        onClick={handleLogout}
+                        className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link
+                  href="/register"
+                  className="bg-[#04A04A] text-white px-8 py-2 rounded-full font-medium hover:bg-[#038B3F] transition-colors"
+                >
+                  Masuk
+                </Link>
+              )}
             </div>
           </div>
         </div>
