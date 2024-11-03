@@ -16,6 +16,27 @@ import {
 import { Button } from "@/components/ui/button";
 import { AlertCircle } from "lucide-react";
 
+interface UserProfile {
+  id: number;
+  nik: string;
+  namaLengkap: string;
+  noTelp: string;
+  email?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface ApiError {
+  status: string;
+  message: string;
+  details?: string;
+}
+
+interface ApiResponse {
+  status: string;
+  user: UserProfile;
+}
+
 export const Navbar = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -28,33 +49,73 @@ export const Navbar = () => {
     setIsClient(true);
   }, []);
 
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      const token = getCookie("token");
-      if (token) {
-        try {
-          console.log("Token:", token);
-          const res = await fetch(
-            "https://jagajkn-be-production.up.railway.app/api/v1/user/profile",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          if (!res.ok) {
-            throw new Error("Failed to fetch user info");
-          }
-          const data = await res.json();
-          setUserName(data.user.namaLengkap);
-        } catch (error) {
-          console.error("Error fetching user info:", error);
-        }
-      } else {
-        console.error("Token not found in cookies");
-      }
-    };
+  const fetchUserInfo = async () => {
+    const token = getCookie("token");
 
+    if (token) {
+      try {
+        // Debug token
+        console.log("Token check:", {
+          length: token.length,
+          hasBearer: token.startsWith("Bearer "),
+          preview: token.substring(0, 20) + "...",
+        });
+
+        const tokenToUse = token.startsWith("Bearer ")
+          ? token
+          : `Bearer ${token}`;
+
+        const res = await fetch(
+          "https://jagajkn-be-production.up.railway.app/api/v1/user/profile",
+          {
+            method: "GET",
+            headers: {
+              Authorization: tokenToUse,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        // Log response details
+        console.log("Response status:", res.status);
+
+        const data = await res.json();
+        console.log("Profile response:", data);
+
+        if (!res.ok) {
+          if (res.status === 401) {
+            deleteCookie("token");
+            router.push("/login");
+            toast.error("Session telah berakhir. Silahkan login kembali.");
+            return;
+          }
+          throw new Error(data.message || "Gagal memuat profil");
+        }
+
+        if (data.status === "success" && data.user?.namaLengkap) {
+          setUserName(data.user.namaLengkap);
+        } else {
+          console.error("Unexpected response format:", data);
+          toast.error("Terjadi kesalahan saat memuat profil");
+        }
+      } catch (error) {
+        console.error("Profile fetch error:", error);
+        if (
+          error instanceof Error &&
+          (error.message.includes("Unauthorized") ||
+            error.message.includes("Invalid token"))
+        ) {
+          deleteCookie("token");
+          router.push("/login");
+          toast.error("Session telah berakhir. Silahkan login kembali.");
+        }
+      }
+    } else {
+      console.log("No token found in cookies");
+    }
+  };
+
+  useEffect(() => {
     if (isClient) {
       fetchUserInfo();
     }
@@ -158,7 +219,7 @@ export const Navbar = () => {
                 </div>
               ) : (
                 <Link
-                  href="/register"
+                  href="/login"
                   className="bg-[#04A04A] text-white px-8 py-2 rounded-full font-medium hover:bg-[#038B3F] transition-colors"
                 >
                   Masuk
@@ -188,7 +249,7 @@ export const Navbar = () => {
             >
               Tutup
             </Button>
-            <Link href="/register">
+            <Link href="/login">
               <Button className="bg-[#04A04A] hover:bg-[#038B3F] px-4">
                 Login Sekarang
               </Button>
