@@ -7,11 +7,11 @@ export const HomepageSection = () => {
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-[95px]">
       <div className="flex items-center justify-center gap-[120px]">
         <div className="flex-1 max-w-sm">
-          <p className="text-3xl sm:text-4xl font-bold leading-tight mb-6">
+          <p className="text-3xl sm:text-4xl font-bold leading-tight mb-6 max-md:text-center">
             <span className="text-[#1E4583]">Jaga</span>
             <span className="text-[#04A04A]">JKN</span>, Jaga Data Pribadi Anda!
           </p>
-          <p className="text-gray-600 text-lg">
+          <p className="text-gray-600 text-lg max-md:text-center">
             JagaJKN, sistem perekaman medis yang terintegrasi dengan Mobile JKN,
             tidak hanya menyederhanakan proses pendaftaran JKN Mobile, tetapi
             juga menyimpan semua data pengguna dan rekam medis secara aman di
