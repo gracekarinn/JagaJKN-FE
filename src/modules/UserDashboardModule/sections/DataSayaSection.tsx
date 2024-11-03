@@ -48,7 +48,21 @@ export const DataSayaSection = () => {
       }
 
       const data = await response.json();
-      setRecords(data.records || []);
+      console.log("Fetched Records:", data.records);
+
+      // Map the fetched data to the expected field names
+      const mappedRecords = data.records.map((record: any) => ({
+        noSEP: record.noSEP,
+        diagnosisAwal: record.diagnosaAwal,
+        diagnosisPrimer: record.diagnosaPrimer,
+        diagnosisSekunder: record.diagnosaSekunder,
+        jenisRawat: record.jenisRawat,
+        statusPulang: record.statusPulang,
+        tanggalMasuk: record.tanggalMasuk,
+        blockchainVerified: record.blockchainVerified,
+      }));
+
+      setRecords(mappedRecords || []);
     } catch (error) {
       console.error("Error fetching records:", error);
       toast.error("Gagal memuat rekaman medis");
@@ -140,7 +154,7 @@ export const DataSayaSection = () => {
                 <div>
                   <h3 className="text-sm font-semibold">Diagnosis Awal</h3>
                   <p className="text-sm text-gray-600">
-                    {record.diagnosisAwal}
+                    {record.diagnosisAwal || "Tidak tersedia"}
                   </p>
                 </div>
 
@@ -148,7 +162,7 @@ export const DataSayaSection = () => {
                   <div>
                     <h3 className="text-sm font-semibold">Diagnosis Primer</h3>
                     <p className="text-sm text-gray-600">
-                      {record.diagnosisPrimer}
+                      {record.diagnosisPrimer || "Tidak tersedia"}
                     </p>
                   </div>
                   <div>
@@ -156,7 +170,7 @@ export const DataSayaSection = () => {
                       Diagnosis Sekunder
                     </h3>
                     <p className="text-sm text-gray-600">
-                      {record.diagnosisSekunder}
+                      {record.diagnosisSekunder || "Tidak tersedia"}
                     </p>
                   </div>
                 </div>
