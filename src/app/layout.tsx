@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { Footer } from "./components/footer";
-import { Navbar } from "./components/navbar";
 
 const albertSans = localFont({
   src: "./fonts/albert-sans-v1-latin-regular.woff2",
