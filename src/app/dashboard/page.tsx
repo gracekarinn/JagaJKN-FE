@@ -1,17 +1,16 @@
 import Footer from "@/components/footer";
 import NavbarWithSuspense from "@/components/navbar";
 import { UserDashboardModule } from "@/modules/UserDashboardModule";
-import React from "react";
+import { Suspense } from "react";
 
-const page = () => {
+export default function DashboardPage() {
   return (
-    <main>
-      <NavbarWithSuspense />
-      <UserDashboardModule />
-
-      <Footer />
-    </main>
+    <Suspense fallback={<div>Loading...</div>}>
+      <main>
+        <NavbarWithSuspense />
+        <UserDashboardModule />
+        <Footer />
+      </main>
+    </Suspense>
   );
-};
-
-export default page;
+}
