@@ -19,7 +19,7 @@ export const HomepageSection = () => {
             informasi kesehatan Anda.
           </p>
         </div>
-        <div className="relative w-[377px] h-[423px]">
+        <div className="relative w-[377px] h-[423px] max-md:hidden">
           <Image
             alt="contoh"
             src="/bpjss.png"
