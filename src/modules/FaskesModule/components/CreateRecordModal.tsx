@@ -98,156 +98,166 @@ export const CreateRecordModal = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-2" variant="default">
+        <Button className="gap-2 w-full sm:w-auto" variant="default">
           <PlusCircle className="h-4 w-4" />
           Tambah Rekam Medis
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px]">
-        <DialogHeader>
-          <DialogTitle>Tambah Rekam Medis Baru</DialogTitle>
-        </DialogHeader>
+      <DialogContent className="sm:max-w-[500px] max-sm:max-w-[400px] p-0 max-h-[90vh] flex flex-col overflow-scroll">
+        <div className="p-6 border-b">
+          <DialogHeader>
+            <DialogTitle>Tambah Rekam Medis Baru</DialogTitle>
+          </DialogHeader>
+        </div>
+
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="noSEP"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>No. SEP</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Masukkan nomor SEP" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="userNIK"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>NIK Pasien</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Masukkan NIK pasien" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="jenisRawat"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Jenis Rawat</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col h-full"
+          >
+            <div className="flex-1 overflow-y-auto p-6 space-y-4">
+              <FormField
+                control={form.control}
+                name="noSEP"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>No. SEP</FormLabel>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Pilih jenis rawat" />
-                      </SelectTrigger>
+                      <Input placeholder="Masukkan nomor SEP" {...field} />
                     </FormControl>
-                    <SelectContent>
-                      <SelectItem value="RAWAT_JALAN">Rawat Jalan</SelectItem>
-                      <SelectItem value="RAWAT_INAP">Rawat Inap</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="diagnosaAwal"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Diagnosa Awal</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Masukkan diagnosa awal"
-                      className="resize-none"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="diagnosaPrimer"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Diagnosa Primer</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Masukkan diagnosa primer"
-                      className="resize-none"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="icdX"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>ICD-X</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Masukkan kode ICD-X" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="tindakan"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Tindakan</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Masukkan tindakan yang dilakukan"
-                      className="resize-none"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="flex justify-end gap-2 pt-4">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setOpen(false)}
-              >
-                Batal
-              </Button>
-              <Button type="submit" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Menyimpan...
-                  </>
-                ) : (
-                  "Simpan"
+                    <FormMessage />
+                  </FormItem>
                 )}
-              </Button>
+              />
+
+              <FormField
+                control={form.control}
+                name="userNIK"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>NIK Pasien</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Masukkan NIK pasien" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="jenisRawat"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Jenis Rawat</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Pilih jenis rawat" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="RAWAT_JALAN">Rawat Jalan</SelectItem>
+                        <SelectItem value="RAWAT_INAP">Rawat Inap</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="diagnosaAwal"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Diagnosa Awal</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Masukkan diagnosa awal"
+                        className="resize-none"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="diagnosaPrimer"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Diagnosa Primer</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Masukkan diagnosa primer"
+                        className="resize-none"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="icdX"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>ICD-X</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Masukkan kode ICD-X" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="tindakan"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Tindakan</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Masukkan tindakan yang dilakukan"
+                        className="resize-none"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="border-t p-6 mt-auto bg-white">
+              <div className="flex justify-end gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setOpen(false)}
+                >
+                  Batal
+                </Button>
+                <Button type="submit" disabled={form.formState.isSubmitting}>
+                  {form.formState.isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Menyimpan...
+                    </>
+                  ) : (
+                    "Simpan"
+                  )}
+                </Button>
+              </div>
             </div>
           </form>
         </Form>
