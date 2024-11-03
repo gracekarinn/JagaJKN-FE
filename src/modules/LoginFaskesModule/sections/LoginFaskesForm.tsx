@@ -60,7 +60,6 @@ export const LoginFormFaskes = () => {
       const { token, faskes } = (await res.json()) as FaskesLoginResponse;
 
       setCookie("token", token);
-      setCookie("kodeFaskes", faskes.kodeFaskes);
 
       toast.success("Login faskes berhasil", {
         description: `Selamat datang, ${faskes.namaFaskes}`,
