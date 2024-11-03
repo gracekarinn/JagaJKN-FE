@@ -5,7 +5,6 @@ import {
   Activity,
   Calendar,
   FileText,
-  Heart,
   Hospital,
   Pill,
   User,
