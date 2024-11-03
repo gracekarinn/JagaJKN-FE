@@ -57,8 +57,16 @@ export const RecordsSection = () => {
       }
 
       const data = await response.json();
+      console.log("Raw records data:", data);
 
-      setRecords(data.records || []);
+      const processedRecords = (data.records || []).map((record: Record) => {
+        console.log("Processing record:", record); // Debug individual records
+        if (!record.user) {
+          console.warn(`Missing user data for record ${record.noSEP}`);
+        }
+        return record;
+      });
+      setRecords(processedRecords);
     } catch (err) {
       console.error("Failed to fetch records:", err);
       if (err instanceof Error) {
@@ -143,12 +151,21 @@ export const RecordsSection = () => {
                         </TableCell>
                         <TableCell>
                           <div>
-                            <div className="font-medium">
-                              {record.user?.nama || "N/A"}
-                            </div>
-                            <div className="text-sm text-gray-500">
-                              {record.userNIK}
-                            </div>
+                            {record.user ? (
+                              <>
+                                <div className="font-medium">
+                                  {record.user.nama}
+                                </div>
+                                <div className="text-sm text-gray-500">
+                                  {record.user.nik}
+                                </div>
+                              </>
+                            ) : (
+                              <div className="text-yellow-600 flex items-center gap-1">
+                                <AlertCircle className="h-4 w-4" />
+                                <span>Data user tidak ditemukan</span>
+                              </div>
+                            )}
                           </div>
                         </TableCell>
                         <TableCell>
