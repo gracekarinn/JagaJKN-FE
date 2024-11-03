@@ -198,7 +198,7 @@ export default function FaskesManagementSection() {
                 {selectedFaskes ? "Edit Faskes" : "Tambah Faskes Baru"}
               </DialogTitle>
             </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4 mx-2">
               <Input
                 placeholder="Kode Faskes"
                 value={formData.kodeFaskes}
