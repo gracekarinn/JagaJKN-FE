@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Menu, X, LogOut, User } from "lucide-react";
 import { deleteCookie, getCookie } from "cookies-next";
 import { toast } from "sonner";
@@ -26,12 +26,6 @@ interface UserProfile {
   updatedAt: string;
 }
 
-interface ApiError {
-  status: string;
-  message: string;
-  details?: string;
-}
-
 interface ApiResponse {
   status: string;
   user: UserProfile;
@@ -42,76 +36,62 @@ export const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [userName, setUserName] = useState<string | null>(null);
   const [isClient, setIsClient] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     setIsClient(true);
+    const token = getCookie("token");
+    setIsLoggedIn(!!token);
   }, []);
 
   const fetchUserInfo = async () => {
     const token = getCookie("token");
+    if (!token) {
+      setIsLoggedIn(false);
+      return;
+    }
 
-    if (token) {
-      try {
-        // Debug token
-        console.log("Token check:", {
-          length: token.length,
-          hasBearer: token.startsWith("Bearer "),
-          preview: token.substring(0, 20) + "...",
-        });
+    try {
+      const tokenToUse = token.startsWith("Bearer ")
+        ? token
+        : `Bearer ${token}`;
 
-        const tokenToUse = token.startsWith("Bearer ")
-          ? token
-          : `Bearer ${token}`;
-
-        const res = await fetch(
-          "https://jagajkn-be-production.up.railway.app/api/v1/user/profile",
-          {
-            method: "GET",
-            headers: {
-              Authorization: tokenToUse,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        // Log response details
-        console.log("Response status:", res.status);
-
-        const data = await res.json();
-        console.log("Profile response:", data);
-
-        if (!res.ok) {
-          if (res.status === 401) {
-            deleteCookie("token");
-            router.push("/login");
-            toast.error("Session telah berakhir. Silahkan login kembali.");
-            return;
-          }
-          throw new Error(data.message || "Gagal memuat profil");
+      const res = await fetch(
+        "https://jagajkn-be-production.up.railway.app/api/v1/user/profile",
+        {
+          method: "GET",
+          headers: {
+            Authorization: tokenToUse,
+            "Content-Type": "application/json",
+          },
         }
+      );
 
-        if (data.status === "success" && data.user?.namaLengkap) {
-          setUserName(data.user.namaLengkap);
-        } else {
-          console.error("Unexpected response format:", data);
-          toast.error("Terjadi kesalahan saat memuat profil");
-        }
-      } catch (error) {
-        console.error("Profile fetch error:", error);
-        if (
-          error instanceof Error &&
-          (error.message.includes("Unauthorized") ||
-            error.message.includes("Invalid token"))
-        ) {
+      if (!res.ok) {
+        if (res.status === 401) {
+          setIsLoggedIn(false);
           deleteCookie("token");
           router.push("/login");
           toast.error("Session telah berakhir. Silahkan login kembali.");
+          return;
         }
+        throw new Error("Failed to fetch profile");
       }
-    } else {
-      console.log("No token found in cookies");
+
+      const data = await res.json();
+      if (data.status === "success" && data.user?.namaLengkap) {
+        setUserName(data.user.namaLengkap);
+        setIsLoggedIn(true);
+      }
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+      setIsLoggedIn(false);
+      if (error instanceof Error) {
+        toast.error(error.message || "Gagal memuat profil");
+      }
     }
   };
 
@@ -121,21 +101,26 @@ export const Navbar = () => {
     }
   }, [isClient]);
 
-  const isActivePath = (path: string) => {
-    return pathname === path;
+  const isActivePath = (path: string, section?: string) => {
+    if (section) {
+      return pathname === path && searchParams.get("section") === section;
+    }
+    return pathname === path && !searchParams.get("section");
   };
 
   const handleProtectedRoute = (e: React.MouseEvent) => {
-    if (!isClient || !getCookie("token")) {
+    if (!isClient || !isLoggedIn) {
       e.preventDefault();
       setShowAuthModal(true);
     }
   };
 
   const handleLogout = () => {
+    setIsLoggedIn(false);
+    setUserName(null);
     deleteCookie("token");
     toast.success("Berhasil logout");
-    router.push("/login");
+    router.push("/");
   };
 
   if (!isClient) {
@@ -181,17 +166,17 @@ export const Navbar = () => {
                 Dashboard
               </Link>
               <Link
-                href="/data-saya"
+                href="/dashboard?section=data-saya"
                 onClick={handleProtectedRoute}
                 className={`font-medium transition-colors ${
-                  isActivePath("/data-saya")
+                  searchParams.get("section") === "data-saya"
                     ? "text-[#04A04A]"
                     : "text-gray-700 hover:text-[#04A04A]"
                 }`}
               >
                 Data Saya
               </Link>
-              {getCookie("token") ? (
+              {isLoggedIn ? (
                 <div className="relative">
                   <button
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -203,7 +188,7 @@ export const Navbar = () => {
                   {isDropdownOpen && (
                     <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg">
                       <Link
-                        href="/profile"
+                        href="/dashboard?section=profile"
                         className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                       >
                         Profile
