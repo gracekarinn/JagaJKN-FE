@@ -2,7 +2,11 @@ import React from "react";
 import { AdminDashboard } from "@/modules/AdminDashboardModule";
 
 const page = () => {
-  return <AdminDashboard />;
+  return (
+    <main className="min-h-screen">
+      <AdminDashboard />
+    </main>
+  );
 };
 
 export default page;
