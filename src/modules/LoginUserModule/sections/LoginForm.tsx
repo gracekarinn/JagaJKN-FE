@@ -63,7 +63,8 @@ export const LoginForm = () => {
       }
 
       const loginData = response as LoginResponse;
-      setCookie("token", loginData.accessToken);
+      console.log("Login data:", loginData);
+      setCookie("token", loginData.accessToken, { path: "/" });
       toast.success(`Selamat datang, ${loginData.user.name}`);
       router.push("/dashboard");
     } catch (err) {
