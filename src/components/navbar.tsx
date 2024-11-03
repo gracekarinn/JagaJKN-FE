@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Menu, X, LogOut, User } from "lucide-react";
+import { User } from "lucide-react";
 import { deleteCookie, getCookie } from "cookies-next";
 import { toast } from "sonner";
 import {
