@@ -1,12 +1,25 @@
+export interface User {
+  id: number;
+  nik: string;
+  namaLengkap: string;
+  noTelp: string;
+  email?: string;
+}
+
 export interface LoginResponse {
-  accessToken: string;
-  user: {
-    nik: string;
-    name: string;
-  };
+  status: string;
+  message?: string;
+  token: string;
+  user: User;
 }
 
 export interface ApiError {
+  status: string;
   message: string;
-  statusCode: number;
+  details?: string;
+}
+
+export interface ApiResponse {
+  status: string;
+  user: User;
 }
