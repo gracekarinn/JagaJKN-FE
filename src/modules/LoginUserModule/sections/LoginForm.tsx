@@ -109,7 +109,7 @@ export const LoginForm = () => {
               </div>
               <div className="space-y-2">
                 <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-700 via-blue-600 to-blue-500 bg-clip-text text-transparent">
-                  BPJS Kesehatan
+                  JagaJKN
                 </h2>
                 <p className="text-sm text-gray-600">
                   Sistem Informasi Rekam Medis Terintegrasi Blockchain
