@@ -8,6 +8,7 @@ const page = () => {
     <main>
       <NavbarWithSuspense />
       <UserDashboardModule />
+
       <Footer />
     </main>
   );
