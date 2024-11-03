@@ -3,7 +3,7 @@ import React, { useState, useEffect, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { User } from "lucide-react";
+import { User, Menu, X } from "lucide-react";
 import { deleteCookie, getCookie } from "cookies-next";
 import { toast } from "sonner";
 import {
@@ -26,7 +26,7 @@ interface UserProfile {
   updatedAt: string;
 }
 
-const NavigationLinks = () => {
+const NavigationLinks = ({ isMobile = false, onItemClick = () => {} }) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -49,39 +49,46 @@ const NavigationLinks = () => {
       e.preventDefault();
       setShowAuthModal(true);
     }
+    onItemClick();
   };
+
+  const linkClassName = isMobile
+    ? "block w-full py-2 px-4 font-medium transition-colors hover:bg-gray-100"
+    : "font-medium transition-colors";
+
+  const getTextColor = (isActive: boolean) =>
+    isActive ? "text-[#04A04A]" : "text-gray-700 hover:text-[#04A04A]";
 
   return (
     <>
       <Link
         href="/"
-        className={`font-medium transition-colors ${
-          isActivePath("/beranda")
-            ? "text-[#04A04A]"
-            : "text-gray-700 hover:text-[#04A04A]"
-        }`}
+        className={`${linkClassName} ${getTextColor(isActivePath("/beranda"))}`}
+        onClick={onItemClick}
       >
         Beranda
       </Link>
       <Link
         href="/dashboard"
-        onClick={handleProtectedRoute}
-        className={`font-medium transition-colors ${
+        onClick={(e) => {
+          handleProtectedRoute(e);
+          onItemClick();
+        }}
+        className={`${linkClassName} ${getTextColor(
           isActivePath("/dashboard")
-            ? "text-[#04A04A]"
-            : "text-gray-700 hover:text-[#04A04A]"
-        }`}
+        )}`}
       >
         Dashboard
       </Link>
       <Link
         href="/dashboard?section=data-saya"
-        onClick={handleProtectedRoute}
-        className={`font-medium transition-colors ${
+        onClick={(e) => {
+          handleProtectedRoute(e);
+          onItemClick();
+        }}
+        className={`${linkClassName} ${getTextColor(
           searchParams.get("section") === "data-saya"
-            ? "text-[#04A04A]"
-            : "text-gray-700 hover:text-[#04A04A]"
-        }`}
+        )}`}
       >
         Data Saya
       </Link>
@@ -117,7 +124,7 @@ const NavigationLinks = () => {
   );
 };
 
-const UserMenu = () => {
+const UserMenu = ({ isMobile = false, onItemClick = () => {} }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [userName, setUserName] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -176,16 +183,48 @@ const UserMenu = () => {
     deleteCookie("token");
     toast.success("Berhasil logout");
     router.push("/");
+    onItemClick();
   };
 
   if (!isLoggedIn) {
-    return (
+    return isMobile ? (
+      <Link
+        href="/login"
+        className="block w-full py-2 px-4 text-gray-700 hover:bg-gray-100 font-medium"
+        onClick={onItemClick}
+      >
+        Masuk
+      </Link>
+    ) : (
       <Link
         href="/login"
         className="bg-[#04A04A] text-white px-8 py-2 rounded-full font-medium hover:bg-[#038B3F] transition-colors"
       >
         Masuk
       </Link>
+    );
+  }
+
+  if (isMobile) {
+    return (
+      <>
+        <div className="px-4 py-2 text-gray-700 font-medium border-t">
+          Halo, {userName || "User"}
+        </div>
+        <Link
+          href="/dashboard?section=profile"
+          className="block w-full py-2 px-4 text-gray-700 hover:bg-gray-100"
+          onClick={onItemClick}
+        >
+          Profile
+        </Link>
+        <button
+          onClick={handleLogout}
+          className="block w-full text-left py-2 px-4 text-gray-700 hover:bg-gray-100"
+        >
+          Logout
+        </button>
+      </>
     );
   }
 
@@ -203,6 +242,7 @@ const UserMenu = () => {
           <Link
             href="/dashboard?section=profile"
             className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+            onClick={() => setIsDropdownOpen(false)}
           >
             Profile
           </Link>
@@ -219,11 +259,13 @@ const UserMenu = () => {
 };
 
 const Navbar = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
     <nav className="bg-[#F5F5FF] fixed w-full top-0 z-50">
-      <div className="max-w-7xl mx-auto px-8 sm:px-10 lg:px-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          <div className="relative w-[100px] h-[40px] ml-4">
+          <div className="relative w-[100px] h-[40px]">
             <Link href="/">
               <Image
                 src="/jagajkn-logo.png"
@@ -234,12 +276,47 @@ const Navbar = () => {
               />
             </Link>
           </div>
-          <div className="flex items-center gap-x-12">
+
+          <div className="hidden md:flex items-center gap-x-12">
             <Suspense fallback={<div>Loading...</div>}>
               <NavigationLinks />
             </Suspense>
             <Suspense fallback={<div>Loading...</div>}>
               <UserMenu />
+            </Suspense>
+          </div>
+
+          {/* Hamburger Menu Button */}
+          <button
+            className="md:hidden p-2 rounded-md text-gray-700 hover:bg-gray-100"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
+          </button>
+        </div>
+
+        {/* Mobile Navigation */}
+        <div
+          className={`md:hidden ${
+            isMobileMenuOpen ? "block" : "hidden"
+          } border-t border-gray-200`}
+        >
+          <div className="py-2 space-y-1">
+            <Suspense fallback={<div>Loading...</div>}>
+              <NavigationLinks
+                isMobile={true}
+                onItemClick={() => setIsMobileMenuOpen(false)}
+              />
+            </Suspense>
+            <Suspense fallback={<div>Loading...</div>}>
+              <UserMenu
+                isMobile={true}
+                onItemClick={() => setIsMobileMenuOpen(false)}
+              />
             </Suspense>
           </div>
         </div>
