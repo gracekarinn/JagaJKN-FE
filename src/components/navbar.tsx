@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -245,3 +245,11 @@ export const Navbar = () => {
     </>
   );
 };
+
+const NavbarWithSuspense = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <Navbar />
+  </Suspense>
+);
+
+export default NavbarWithSuspense;
