@@ -31,7 +31,7 @@ interface ApiResponse {
   user: UserProfile;
 }
 
-export const Navbar = () => {
+const Navbar = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [userName, setUserName] = useState<string | null>(null);
